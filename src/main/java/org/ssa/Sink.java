@@ -6,7 +6,7 @@ import java.util.ArrayList;
  *	@author Joel Karel
  *	@version %I%, %G%
  */
-public class Sink implements ProductAcceptor
+public class Sink implements PatientAcceptor
 {
 	/** All products are kept */
 	private ArrayList<Product> products;
@@ -35,7 +35,7 @@ public class Sink implements ProductAcceptor
 	}
 	
         @Override
-	public boolean giveProduct(Product p)
+	public boolean givePatient(Product p, int zone)
 	{
 		number++;
 		products.add(p);

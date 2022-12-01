@@ -7,7 +7,7 @@ import java.util.ArrayList;
  *	@author Joel Karel
  *	@version %I%, %G%
  */
-public class Queue implements ProductAcceptor
+public class Queue implements PatientAcceptor
 {
 	/** List in which the products are kept */
 	private ArrayList<Product> row;
@@ -28,13 +28,16 @@ public class Queue implements ProductAcceptor
 	*	Asks a queue to give a product to a machine
 	*	True is returned if a product could be delivered; false if the request is queued
 	*/
-	public boolean askProduct(Machine machine)
+	public boolean askPatient(Machine machine )
 	{
 		// This is only possible with a non-empty queue
 		if(row.size()>0)
 		{
 			// If the machine accepts the product
-			if(machine.giveProduct(row.get(0)))
+			int zone = 1; // TODO make this a parameter
+
+			// ambulance.giveProduct(row.get(0)))
+			if(machine.givePatient(row.get(0), zone))
 			{
 				row.remove(0);// Remove it from the queue
 				return true;
@@ -53,7 +56,7 @@ public class Queue implements ProductAcceptor
 	*	Offer a product to the queue
 	*	It is investigated whether a machine wants the product, otherwise it is stored
 	*/
-	public boolean giveProduct(Product p)
+	public boolean givePatient(Product p, int zone)
 	{
 		// Check if the machine accepts it
 		if(requests.size()<1)
@@ -63,7 +66,7 @@ public class Queue implements ProductAcceptor
 			boolean delivered = false;
 			while(!delivered & (requests.size()>0))
 			{
-				delivered=requests.get(0).giveProduct(p);
+				delivered=requests.get(0).givePatient(p,1); //TODO change the 1
 				// remove the request regardless of whether or not the product has been accepted
 				requests.remove(0);
 			}

@@ -12,7 +12,7 @@ public class Source implements CProcess
 	/** Eventlist that will be requested to construct events */
 	private CEventList list;
 	/** Queue that buffers products for the machine */
-	private ProductAcceptor queue;
+	private PatientAcceptor queue;
 	/** Name of the source */
 	private String name;
 	/** Mean interarrival time */
@@ -29,7 +29,7 @@ public class Source implements CProcess
 	*	@param l	The eventlist that is requested to construct events
 	*	@param n	Name of object
 	*/
-	public Source(ProductAcceptor q,CEventList l,String n)
+	public Source(PatientAcceptor q, CEventList l, String n)
 	{
 		list = l;
 		queue = q;
@@ -47,7 +47,7 @@ public class Source implements CProcess
 	*	@param n	Name of object
 	*	@param m	Mean arrival time
 	*/
-	public Source(ProductAcceptor q,CEventList l,String n,double m)
+	public Source(PatientAcceptor q, CEventList l, String n, double m)
 	{
 		list = l;
 		queue = q;
@@ -65,7 +65,7 @@ public class Source implements CProcess
 	*	@param n	Name of object
 	*	@param ia	interarrival times
 	*/
-	public Source(ProductAcceptor q,CEventList l,String n,double[] ia)
+	public Source(PatientAcceptor q, CEventList l, String n, double[] ia)
 	{
 		list = l;
 		queue = q;
@@ -85,7 +85,7 @@ public class Source implements CProcess
 		// give arrived product to queue
 		Product p = new Product();
 		p.stamp(tme,"Creation",name);
-		queue.giveProduct(p);
+		queue.givePatient(p,1); //TODO
 		// generate duration
 		if(meanArrTime>0)
 		{

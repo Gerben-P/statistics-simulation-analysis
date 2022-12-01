@@ -7,7 +7,7 @@ package org.ssa;
  *	@author Joel Karel
  *	@version %I%, %G%
  */
-public class Machine implements CProcess,ProductAcceptor
+public class Machine implements CProcess, PatientAcceptor
 {
 	/** Product that is being handled  */
 	private Product product;
@@ -16,7 +16,7 @@ public class Machine implements CProcess,ProductAcceptor
 	/** Queue from which the machine has to take products */
 	private Queue queue;
 	/** Sink to dump products */
-	private ProductAcceptor sink;
+	private PatientAcceptor sink;
 	/** Status of the machine (b=busy, i=idle) */
 	private char status;
 	/** Machine name */
@@ -37,7 +37,7 @@ public class Machine implements CProcess,ProductAcceptor
 	*	@param e	Eventlist that will manage events
 	*	@param n	The name of the machine
 	*/
-	public Machine(Queue q, ProductAcceptor s, CEventList e, String n)
+	public Machine(Queue q, PatientAcceptor s, CEventList e, String n)
 	{
 		status='i';
 		queue=q;
@@ -45,7 +45,7 @@ public class Machine implements CProcess,ProductAcceptor
 		eventlist=e;
 		name=n;
 		meanProcTime=30;
-		queue.askProduct(this);
+		queue.askPatient(this);
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class Machine implements CProcess,ProductAcceptor
 	*	@param n	The name of the machine
 	*        @param m	Mean processing time
 	*/
-	public Machine(Queue q, ProductAcceptor s, CEventList e, String n, double m)
+	public Machine(Queue q, PatientAcceptor s, CEventList e, String n, double m)
 	{
 		status='i';
 		queue=q;
@@ -65,7 +65,7 @@ public class Machine implements CProcess,ProductAcceptor
 		eventlist=e;
 		name=n;
 		meanProcTime=m;
-		queue.askProduct(this);
+		queue.askPatient(this);
 	}
 	
 	/**
@@ -77,7 +77,7 @@ public class Machine implements CProcess,ProductAcceptor
 	*	@param n	The name of the machine
 	*        @param st	service times
 	*/
-	public Machine(Queue q, ProductAcceptor s, CEventList e, String n, double[] st)
+	public Machine(Queue q, PatientAcceptor s, CEventList e, String n, double[] st)
 	{
 		status='i';
 		queue=q;
@@ -87,7 +87,7 @@ public class Machine implements CProcess,ProductAcceptor
 		meanProcTime=-1;
 		processingTimes=st;
 		procCnt=0;
-		queue.askProduct(this);
+		queue.askPatient(this);
 	}
 
 	/**
@@ -101,12 +101,12 @@ public class Machine implements CProcess,ProductAcceptor
 		System.out.println("Product finished at time = " + tme);
 		// Remove product from system
 		product.stamp(tme,"Production complete",name);
-		sink.giveProduct(product);
+		sink.givePatient(product,1); // TODO change 1 to correct zone number
 		product=null;
 		// set machine status to idle
 		status='i';
 		// Ask the queue for products
-		queue.askProduct(this);
+		queue.askPatient(this);
 	}
 	
 	/**
@@ -115,9 +115,10 @@ public class Machine implements CProcess,ProductAcceptor
 	*	@return	true if the product is accepted and started, false in all other cases
 	*/
         @Override
-	public boolean giveProduct(Product p)
+	public boolean givePatient(Product p, int zone)
 	{
 		// Only accept something if the machine is idle
+		// if an ambulance is available (while loop on the 5 ambulance)
 		if(status=='i')
 		{
 			// accept the product
